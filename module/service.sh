@@ -10,8 +10,11 @@ echo $kptr_set > /proc/sys/kernel/kptr_restrict
 
 if lsmod | grep -q fgetpriority; then
 	rmmod "$KO"
+	[ -n "$ACTION" ] && \
+	echo "[-] Unloaded module" && exit 0
 fi
 
 if ! insmod "$KO" kallsyms_lookup_name_fn="$addr" ; then
 	ksud insmod "$KO" kallsyms_lookup_name_fn="$addr"
 fi
+[ -n "$ACTION" ] && echo "[+] Loaded module"
